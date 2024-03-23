@@ -29,9 +29,8 @@ def insert_order(db_file):
     try:
         # List of tuples containing values to insert
         flights_data = [
-            ('NRT', 'LHR', '20'),
-            ('ABC', 'XYZ', '30'),
-            ('DEF', 'GHI', '40')
+            ('mmm', 'LHR', '20'),
+            ('DEF', 'qqq', '40')
             # Add more tuples as needed
         ]
 
@@ -46,11 +45,13 @@ def insert_order(db_file):
 
 
 def get_flights(db_file, flight):
-    list_sql = "SELECT * FROM flights WHERE from_city = 'NRT'"
+    print("test")
+    print("in DB", flight)
+    list_sql = "SELECT * FROM flights WHERE from_city = ?"
     conn, cursor = get_cursor(db_file)
 
     try:
-        cursor.execute(list_sql)
+        cursor.execute(list_sql, (flight,))
         records = cursor.fetchall()
         print("Total rows are:  ", len(records))
         cursor.close()
