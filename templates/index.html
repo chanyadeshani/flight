@@ -1,0 +1,86 @@
+{% block content %}
+<h2>Flight Details</h2>
+    <div class="input-container">
+        <label for="flight-type">Select Flight Type:</label>
+        <select id="flight-type" name="flight-type">
+            <option value="one-way">One-way</option>
+            <option value="round-trip">Round-Trip</option>
+            <option value="multi-city">Multi-city</option>
+        </select>
+    </div>
+    <div class="input-container">
+        <label for="origin">Originating Terminal:</label>
+        <input type="text" id="origin" placeholder="Leaving from" name="origin">
+    </div>
+    <div class="input-container">
+        <label for="destination">Destination Terminal:</label>
+        <input type="text" id="destination" placeholder="Going to" name="destination">
+    </div>
+    <div class="input-container" id="stops-container" style="display: none;">
+        <label for="stops">Stops:</label>
+        <input type="text" id="stops" name="stops">
+    </div>
+    <div class="input-container" id="date-from-container">
+        <label for="date_from">Date From:</label>
+        <input type="text" id="date_from" name="date_from">
+    </div>
+    <div class="input-container" id="date-to-container">
+        <label for="date_to">Date to:</label>
+        <input type="text" id="date_to" name="date_from">
+    </div>
+    <div class="input-container">
+        <label for="seats">No of Traveler </label>
+        <input type="text" id="seats" name="seats">
+    </div>
+    <div class="button-container">
+        <button onclick="saveDetails()">Confirm</button>
+    </div>
+
+    <script>
+        // Function to display input values
+        function displayFlightDetails() {
+            var flightType = document.getElementById("flight-type").value;
+            var origin = document.getElementById("origin").value;
+            var destination = document.getElementById("destination").value;
+            var stops = document.getElementById("stops").value;
+            var seats = document.getElementById("seats").value;
+
+            // Show/hide stops input area based on flight type
+            var stopsContainer = document.getElementById("stops-container");
+            if (flightType === "multi-city") {
+                stopsContainer.style.display = "block";
+            } else {
+                stopsContainer.style.display = "none";
+            }
+        }
+
+        // Call the function initially
+        displayFlightDetails();
+
+        // Add event listeners to inputs
+        var inputs = document.querySelectorAll('input[type="text"], select');
+        inputs.forEach(input => {
+            input.addEventListener('input', displayFlightDetails);
+        });
+
+        function saveDetails() {
+
+            var flightDetails = {
+                "flightType": document.getElementById("flight-type").value,
+                "origin": document.getElementById("origin").value,
+                "destination": document.getElementById("destination").value,
+                "stops": document.getElementById("stops").value,
+                "seats": document.getElementById("seats").value
+            };
+
+            // Send a POST request to the Flask endpoint
+            const response = fetch('/get_flights', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(flightDetails)
+            });
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% block content %}
+    <h2>Flight Details</h2>
+    <table>
+        <tr>
+            <th>Flight Type</th>
+            <th>Originating Terminal</th>
+            <th>Destination Terminal</th>
+            <th>Stops</th>
+            <th>Seats Booked/Available</th>
+        </tr>
+        {% for row in flight %}
+
+         <tr>
+            <td id="flight-type-display">row[0]</td>
+            <td id="origin-display">row[1]</td>
+            <td id="destination-display">row[2]</td>
+            <td id="stops-display">row[3]</td>
+            <td id="seats-display">row[4]</td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+    <div class="button-container">
+        <button onclick="bookFlight()">Book</button>
+    </div>
+    <script>
+        // Retrieve flight details from local storage
+        var flightDetails = JSON.parse(localStorage.getItem("flightDetails"));
+
+        // Display flight details in table
+        document.getElementById("flight-type-display").textContent = flightDetails.flightType;
+        document.getElementById("origin-display").textContent = flightDetails.origin;
+        document.getElementById("destination-display").textContent = flightDetails.destination;
+        if(flightDetails.stops == ""){
+            flightDetails.stops = "None";
+        }
+        document.getElementById("stops-display").textContent = flightDetails.stops;
+        document.getElementById("seats-display").textContent = flightDetails.seats;
+
+         // Function to book flight
+        function bookFlight() {
+            // Your booking logic goes here
+            window.location.href = "Customer_details.html"
+
+        }
+    </script>
+{% endblock %}
