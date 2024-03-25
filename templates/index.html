@@ -101,6 +101,10 @@
     inputs.forEach(input => {
         input.addEventListener('input', displayFlightDetails);
     });
+    function handleRowClick(flightNumber) {
+        // Redirect to a new page when a row is clicked
+        window.location.href = "/customer";
+    }
 
     function getFlights() {
         var flightType = document.getElementById("flight-type").value;
@@ -142,7 +146,7 @@
                 newRow += "</tr>";
             flightTable.innerHTML += newRow
             data.forEach(row => {
-                var newRow = "<tr>";
+                var newRow = "<tr onclick=\"handleRowClick('" + row[0] + "')\">";
                 newRow += "<td>" + row[0] + "</td>";
                 newRow += "<td>" + row[1] + "</td>";
                 newRow += "<td>" + row[2] + "</td>";
