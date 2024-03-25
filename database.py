@@ -9,6 +9,7 @@ def init_database(db_file):
                                                     from_city text NOT NULL,
                                                     to_city text NOT NULL,
                                                     price text
+                                                    available_seats integer
                                                 ); """
 
     try:
@@ -29,9 +30,8 @@ def insert_order(db_file):
     try:
         # List of tuples containing values to insert
         flights_data = [
-            ('mmm', 'LHR', '20'),
-            ('DEF', 'qqq', '40')
-            # Add more tuples as needed
+            ('NCE', 'LHR', '290'),
+            ('LHR', 'NCE', '280')
         ]
 
         # Loop through the list and execute the INSERT statement for each tuple
