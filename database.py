@@ -8,7 +8,7 @@ def init_database(db_file):
                                                     flight_id integer PRIMARY KEY AUTOINCREMENT,
                                                     from_city text NOT NULL,
                                                     to_city text NOT NULL,
-                                                    price text
+                                                    price text,
                                                     available_seats integer
                                                 ); """
 
@@ -30,13 +30,17 @@ def insert_order(db_file):
     try:
         # List of tuples containing values to insert
         flights_data = [
-            ('NCE', 'LHR', '290'),
-            ('LHR', 'NCE', '280')
+            ('NRT', 'EDI', '3190', '9'),
+            ('EDI', 'NRT', '3180', '5'),
+            ('OXF', 'EDI', '190','6'),
+            ('EDI', 'BMX', '110','10'),
+            ('LHR', 'EDI', '140', '30'),
+            ('EDI', 'OXF', '120', '0')
         ]
 
         # Loop through the list and execute the INSERT statement for each tuple
         for flight_data in flights_data:
-            cursor.execute("INSERT INTO flights (from_city, to_city, price) VALUES (?, ?, ?)", flight_data)
+            cursor.execute("INSERT INTO flights (from_city, to_city, price, available_seats) VALUES (?, ?, ?, ?)", flight_data)
 
         # Commit the transaction after all inserts
         conn.commit()
@@ -44,14 +48,14 @@ def insert_order(db_file):
         print(e)
 
 
-def get_flights(db_file, flight):
+def get_flights(db_file, from_city, to_city):
     print("test")
-    print("in DB", flight)
-    list_sql = "SELECT * FROM flights WHERE from_city = ?"
+    print("in DB", from_city, to_city)
+    list_sql = "SELECT * FROM flights WHERE from_city = ? AND to_city = ?"
     conn, cursor = get_cursor(db_file)
 
     try:
-        cursor.execute(list_sql, (flight,))
+        cursor.execute(list_sql, (from_city, to_city))
         records = cursor.fetchall()
         print("Total rows are:  ", len(records))
         cursor.close()

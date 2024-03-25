@@ -22,11 +22,10 @@ def submit_order():
     if flightType.lower() == "one-way":
         flight = [origin, destination]
         print(flight[0], flight[1])
-        available_flights = database.get_flights('flight.db', flight[0])
+        available_flights = database.get_flights('flight.db', flight[0],flight[1])
         print("test", len(available_flights))
         # Return a response (optional)
     return available_flights
-    #return render_template("flight_details_display.html", flights=available_flights)
 
 
 if __name__ == '__main__':
