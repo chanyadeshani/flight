@@ -1,3 +1,4 @@
+{% extends 'base.html' %}
 {% block content %}
 <h2>Flight Details</h2>
     <div class="input-container">
@@ -10,49 +11,90 @@
     </div>
     <div class="input-container">
         <label for="origin">Originating Terminal:</label>
-        <input type="text" id="origin" placeholder="Leaving from" name="origin">
+        <input type="text" id="origin" required="Required" placeholder="Leaving from" name="origin">
     </div>
     <div class="input-container">
         <label for="destination">Destination Terminal:</label>
-        <input type="text" id="destination" placeholder="Going to" name="destination">
+        <input type="text" id="destination" required="Required" placeholder="Going to" name="destination">
     </div>
     <div class="input-container" id="stops-container" style="display: none;">
         <label for="stops">Stops:</label>
-        <input type="text" id="stops" name="stops">
+        <input type="text" id="stops" required="Required" name="stops">
     </div>
     <div class="input-container" id="date-from-container">
         <label for="date_from">Date From:</label>
-        <input type="text" id="date_from" name="date_from">
+        <input type="date" id="date_from" required="Required" name="date_from" min="2024-03-26">
     </div>
     <div class="input-container" id="date-to-container">
         <label for="date_to">Date to:</label>
-        <input type="text" id="date_to" name="date_from">
+        <input type="date" id="date_to" required="Required" name="date_to" min="2024-03-26">
     </div>
     <div class="input-container">
         <label for="seats">No of Traveler </label>
         <input type="text" id="seats" name="seats">
     </div>
+
     <div class="button-container">
+        <p class = "error" style="display: none;"> </p>
         <button onclick="saveDetails()">Confirm</button>
     </div>
+<div>
+        <h2>Flight Details</h2>
+    <table>
+        <tr>
+            <th>Flight Type</th>
+            <th>Originating Terminal</th>
+            <th>Destination Terminal</th>
+            <th>Stops</th>
+            <th>Seats Booked/Available</th>
+        </tr>
+        {% for row in flight %}
+
+         <tr>
+            <td id="flight-type-display">row[0]</td>
+            <td id="origin-display">row[1]</td>
+            <td id="destination-display">row[2]</td>
+            <td id="stops-display">row[3]</td>
+            <td id="seats-display">row[4]</td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+</div>
 
     <script>
-        // Function to display input values
-        function displayFlightDetails() {
-            var flightType = document.getElementById("flight-type").value;
-            var origin = document.getElementById("origin").value;
-            var destination = document.getElementById("destination").value;
-            var stops = document.getElementById("stops").value;
-            var seats = document.getElementById("seats").value;
+    // Get references to date input fields
+    var dateFromInput = document.getElementById("date_from");
+    var dateToInput = document.getElementById("date_to");
 
-            // Show/hide stops input area based on flight type
-            var stopsContainer = document.getElementById("stops-container");
-            if (flightType === "multi-city") {
-                stopsContainer.style.display = "block";
-            } else {
-                stopsContainer.style.display = "none";
-            }
+    // Add event listener to "date_from" input field
+    dateFromInput.addEventListener("change", function() {
+        // Update the "min" attribute of "date_to" input field
+        dateToInput.min = dateFromInput.value;
+
+        // If "date_to" value is less than "date_from", reset it
+        if (dateToInput.value < dateFromInput.value) {
+            dateToInput.value = dateFromInput.value;
         }
+
+     //1st code - disable previous dates
+    // Get today's date
+    var today = new Date().toISOString().split('T')[0];
+// Set the minimum selectable date to today
+    document.getElementById("selected_date").setAttribute("min", today);
+
+function displayFlightDetails() {
+    var flightType = document.getElementById("flight-type").value;
+
+    // Show/hide stops input area based on flight type
+    var stopsContainer = document.getElementById("stops-container");
+    if (flightType === "multi-city") { // Change "Multi-city" to "multi-city"
+        stopsContainer.style.display = "block";
+    } else {
+        stopsContainer.style.display = "none";
+    }
+}
 
         // Call the function initially
         displayFlightDetails();
@@ -81,6 +123,12 @@
                 },
                 body: JSON.stringify(flightDetails)
             });
+        // Handle the response if needed
+            if (response.ok) {
+                console.log('Order submitted successfully!');
+            } else {
+                console.error('Failed to submit order.');
+            }
         }
     </script>
 {% endblock %}
