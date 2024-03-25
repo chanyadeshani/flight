@@ -108,13 +108,17 @@
         var destination = document.getElementById("destination").value;
         var stops = document.getElementById("stops").value;
         var seats = document.getElementById("seats").value;
+        var date_from = document.getElementById("date_from").value;
+        var date_to = document.getElementById("date_to").value;
 
         var data = {
             "flightType": flightType,
             "origin": origin,
             "destination": destination,
             "stops": stops,
-            "seats": seats
+            "seats": seats,
+            "date_from" : date_from,
+            date_to: date_to
         };
 
         fetch('/get_flights', {
