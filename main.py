@@ -18,12 +18,14 @@ def submit_order():
     stops = data.get('stops')
     seats = data.get('seats')
     from_date= data.get('date_from')
+    to_date = data.get('date_to')
     available_flights = [0,0,0,0,0,0,0]
+    available_flights2 = ''
     if flightType.lower() == "one-way" or flightType.lower() == "round-trip":
         flight = [origin, destination,from_date]
         available_flights = database.get_flights('flight.db', flight[0],flight[1],flight[2])
         print("test", len(available_flights))
-        # Return a response (optional)
+
     return available_flights
 
 
