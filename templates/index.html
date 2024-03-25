@@ -11,23 +11,23 @@
     </div>
     <div class="input-container">
         <label for="origin">Originating Terminal:</label>
-        <input type="text" id="origin" required="Required" placeholder="Leaving from" name="origin">
+        <input type="text" id="origin" required placeholder="Leaving from" name="origin">
     </div>
     <div class="input-container">
         <label for="destination">Destination Terminal:</label>
-        <input type="text" id="destination" required="Required" placeholder="Going to" name="destination">
+        <input type="text" id="destination" required placeholder="Going to" name="destination">
     </div>
     <div class="input-container" id="stops-container" style="display: none;">
         <label for="stops">Stops:</label>
-        <input type="text" id="stops" required="Required" name="stops">
+        <input type="text" id="stops" required name="stops">
     </div>
     <div class="input-container" id="date-from-container">
         <label for="date_from">Date From:</label>
-        <input type="date" id="date_from" required="Required" name="date_from" min="2024-03-26">
+        <input type="date" id="date_from" required name="date_from" min="2024-03-26">
     </div>
     <div class="input-container" id="date-to-container">
         <label for="date_to">Date to:</label>
-        <input type="date" id="date_to" required="Required" name="date_to" min="2024-03-26">
+        <input type="date" id="date_to" required name="date_to" min="2024-03-26">
     </div>
     <div class="input-container">
         <label for="seats">No of Traveler </label>
@@ -35,11 +35,11 @@
     </div>
 
     <div class="button-container">
-        <p class = "error" style="display: none;"> </p>
+        <p class="error" style="display: none;"> </p>
         <button onclick="saveDetails()">Confirm</button>
     </div>
 <div>
-        <h2>Flight Details</h2>
+    <h2>Flight Details</h2>
     <table>
         <tr>
             <th>Flight Type</th>
@@ -51,11 +51,11 @@
         {% for row in flight %}
 
          <tr>
-            <td id="flight-type-display">row[0]</td>
-            <td id="origin-display">row[1]</td>
-            <td id="destination-display">row[2]</td>
-            <td id="stops-display">row[3]</td>
-            <td id="seats-display">row[4]</td>
+            <td id="flight-type-display">{{ row[0] }}</td>
+            <td id="origin-display">{{ row[1] }}</td>
+            <td id="destination-display">{{ row[2] }}</td>
+            <td id="stops-display">{{ row[3] }}</td>
+            <td id="seats-display">{{ row[4] }}</td>
         </tr>
 
         {% endfor %}
@@ -77,58 +77,62 @@
         if (dateToInput.value < dateFromInput.value) {
             dateToInput.value = dateFromInput.value;
         }
+    });
 
-     //1st code - disable previous dates
-    // Get today's date
+    // Disable previous dates
     var today = new Date().toISOString().split('T')[0];
-// Set the minimum selectable date to today
-    document.getElementById("selected_date").setAttribute("min", today);
+    document.getElementById("date_from").setAttribute("min", today);
 
-function displayFlightDetails() {
-    var flightType = document.getElementById("flight-type").value;
+    function displayFlightDetails() {
+        var flightType = document.getElementById("flight-type").value;
 
-    // Show/hide stops input area based on flight type
-    var stopsContainer = document.getElementById("stops-container");
-    if (flightType === "multi-city") { // Change "Multi-city" to "multi-city"
-        stopsContainer.style.display = "block";
-    } else {
-        stopsContainer.style.display = "none";
+        // Show/hide stops input area based on flight type
+        var stopsContainer = document.getElementById("stops-container");
+        if (flightType === "multi-city") {
+            stopsContainer.style.display = "block";
+        } else {
+            stopsContainer.style.display = "none";
+        }
     }
-}
 
-        // Call the function initially
-        displayFlightDetails();
+    // Call the function initially
+    displayFlightDetails();
 
-        // Add event listeners to inputs
-        var inputs = document.querySelectorAll('input[type="text"], select');
-        inputs.forEach(input => {
-            input.addEventListener('input', displayFlightDetails);
-        });
+    // Add event listeners to inputs
+    var inputs = document.querySelectorAll('input[type="text"], select');
+    inputs.forEach(input => {
+        input.addEventListener('input', displayFlightDetails);
+    });
 
-        function saveDetails() {
+    function saveDetails() {
 
-            var flightDetails = {
-                "flightType": document.getElementById("flight-type").value,
-                "origin": document.getElementById("origin").value,
-                "destination": document.getElementById("destination").value,
-                "stops": document.getElementById("stops").value,
-                "seats": document.getElementById("seats").value
-            };
+        var flightDetails = {
+            "flightType": document.getElementById("flight-type").value,
+            "origin": document.getElementById("origin").value,
+            "destination": document.getElementById("destination").value,
+            "stops": document.getElementById("stops").value,
+            "seats": document.getElementById("seats").value
+        };
 
-            // Send a POST request to the Flask endpoint
-            const response = fetch('/get_flights', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(flightDetails)
-            });
-        // Handle the response if needed
+        // Send a POST request to the Flask endpoint
+        fetch('/get_flights', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(flightDetails)
+        }).then(response => {
             if (response.ok) {
                 console.log('Order submitted successfully!');
+                // Optionally, you can redirect the user or show a success message here
             } else {
                 console.error('Failed to submit order.');
+                // Handle the error case here
             }
-        }
+        }).catch(error => {
+            console.error('Error occurred:', error);
+            // Handle any errors that occurred during the fetch operation
+        });
+    }
     </script>
 {% endblock %}
