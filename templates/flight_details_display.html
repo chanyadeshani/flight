@@ -7,7 +7,7 @@
             <th>Originating Terminal</th>
             <th>Destination Terminal</th>
             <th>Stops</th>
-            <th>Seats Booked/Available</th>
+            <th>Available</th>
         </tr>
         {% for row in flight %}
 
@@ -17,6 +17,7 @@
             <td id="destination-display">row[2]</td>
             <td id="stops-display">row[3]</td>
             <td id="seats-display">row[4]</td>
+             <td> <p>Book</p></td>
         </tr>
 
         {% endfor %}

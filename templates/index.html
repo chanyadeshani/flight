@@ -10,28 +10,44 @@
     </select>
 </div>
 <div class="input-container">
-    <label for="origin">Originating Terminal:</label>
-    <input type="text" id="origin" required placeholder="Leaving from" name="origin">
+    <label for="origin">Leaving from:</label>
+    <select id="origin"  name="origin">
+         <option value="BMX">BMX(Birmingham)</option>
+        <option value="BMX">BMX(Bristol)</option>
+        <option value="EDI">EDI (Edinburgh)</option>
+         <option value="LHR">LHR(London)</option>
+        <option value="NRT">NRT(Tokyo)</option>
+        <option value="OXF">OXF (Oxford)</option>
+        <option value="ZRH">ZRH(Zurich)</option>
+    </select>
 </div>
 <div class="input-container">
-    <label for="destination">Destination Terminal:</label>
-    <input type="text" id="destination" required placeholder="Going to" name="destination">
+    <label for="destination">Going to:</label>
+    <select id="destination" name="destination">
+             <option value="BMX">BMX(Birmingham)</option>
+        <option value="BMX">BMX(Bristol)</option>
+        <option value="EDI">EDI (Edinburgh)</option>
+         <option value="LHR">LHR(London)</option>
+        <option value="NRT">NRT(Tokyo)</option>
+        <option value="OXF">OXF (Oxford)</option>
+        <option value="ZRH">ZRH(Zurich)</option>
+    </select>
 </div>
 <div class="input-container" id="stops-container" style="display: none;">
-    <label for="stops">Stops:</label>
+    <label for="stops">Stops(1 or 2):</label>
     <input type="text" id="stops" required name="stops">
 </div>
 <div class="input-container" id="date-from-container">
     <label for="date_from">Date From:</label>
-    <input type="date" id="date_from" required name="date_from" min="2024-03-26">
+    <input type="date" id="date_from" required name="date_from" min="2024-04-23" max="2025-04-23">
 </div>
-<div class="input-container" id="date-to-container">
+<div class="input-container" id="date-to-container" style="display: none;">
     <label for="date_to">Date to:</label>
-    <input type="date" id="date_to" required name="date_to" min="2024-03-26">
+    <input type="date" id="date_to" required name="date_to" min="2024-03-26" max="2025-04-23">
 </div>
 <div class="input-container">
-    <label for="seats">No of Traveler (numbers only)</label>
-    <input type="text" id="seats" name="seats">
+    <label for="seats">No of Traveler (up to 99)</label>
+    <input type="text" id="seats" name="seats" maxlength="2">
     <p id="seats-error" style="display: none; color: red;">Please enter numbers only.</p>
 </div>
 
@@ -44,11 +60,11 @@
     <h2>Flight Details</h2>
     <table id="flight-table">
         <tr>
-            <th>Flight Type</th>
+            <th>Flight Time</th>
             <th>Originating Terminal</th>
             <th>Destination Terminal</th>
-            <th>Stops</th>
-            <th>Seats Booked/Available</th>
+            <th>Price</th>
+            <th>Seats Available</th>
         </tr>
     </table>
 </div>
