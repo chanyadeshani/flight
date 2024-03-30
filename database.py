@@ -10,7 +10,8 @@ def init_database(db_file):
                                                     to_city text NOT NULL,
                                                     price text,
                                                     available_seats integer,
-                                                    date text
+                                                    date text,
+                                                    time text
                                                 ); """
 
     try:
@@ -31,36 +32,37 @@ def insert_order(db_file):
     try:
         # List of tuples containing values to insert
         flights_data = [
-            ('NRT', 'EDI', '3190', '9', '2024-03-27'),
-            ('EDI', 'NRT', '3180', '5','2024-03-27'),
-            ('OXF', 'EDI', '190','6','2024-03-28'),
-            ('EDI', 'BMX', '110','10','2024-03-28'),
-            ('LHR', 'EDI', '140', '30','2024-03-27'),
-            ('EDI', 'OXF', '120', '0','2024-03-27'),
-            ('NRT', 'EDI', '3190', '9', '2024-03-27'),
-            ('EDI', 'NRT', '3180', '5', '2024-03-27'),
-            ('OXF', 'EDI', '190', '6', '2024-03-27'),
-            ('EDI', 'BMX', '110', '10', '2024-03-27'),
-            ('LHR', 'EDI', '140', '30', '2024-03-27'),
-            ('EDI', 'OXF', '120', '0', '2024-03-27'),
-            ('NRT', 'EDI', '3190', '19', '2024-03-27'),
-            ('EDI', 'NRT', '3180', '15','2024-03-27'),
-            ('BMX', 'EDI', '190','16','2024-03-28'),
-            ('EDI', 'BMX', '110','20','2024-03-28'),
-            ('LHR', 'EDI', '140', '33','2024-03-28'),
-            ('EDI', 'OXF', '120', '2','2024-03-28'),
-            ('NRT', 'EDI', '3190', '19', '2024-03-30'),
-            ('EDI', 'NRT', '3180', '51', '2024-03-30'),
-            ('OXF', 'EDI', '190', '61', '2024-03-30'),
-            ('EDI', 'BMX', '110', '11', '2024-03-30'),
-            ('LHR', 'EDI', '140', '0', '2024-04-1'),
-            ('EDI', 'OXF', '120', '1', '2024-04-2')
+            ('NRT', 'EDI', '3190', '9', '2024-04-27', '10:00'),
+            ('EDI', 'NRT', '3180', '5', '2024-04-27', '20:00'),
+            ('OXF', 'EDI', '190', '6', '2024-04-28', '3:00'),
+            ('EDI', 'BMX', '110', '10', '2024-04-28', '11:00'),
+            ('LHR', 'EDI', '140', '30', '2024-04-27', '12:00'),
+            ('EDI', 'OXF', '120', '0', '2024-04-27', '13:00'),
+            ('NRT', 'EDI', '3190', '9', '2024-04-27', '10:00'),
+            ('EDI', 'NRT', '3180', '5', '2024-04-27', '20:00'),
+            ('OXF', 'EDI', '190', '6', '2024-04-27', '21:00'),
+            ('EDI', 'BMX', '110', '10', '2024-04-27', '06:00'),
+            ('LHR', 'EDI', '140', '30', '2024-04-27', '10:00'),
+            ('EDI', 'OXF', '120', '0', '2024-04-27', '15:00'),
+            ('NRT', 'EDI', '3190', '19', '2024-04-27', '18:00'),
+            ('EDI', 'NRT', '3180', '15', '2024-04-27', '19:00'),
+            ('BMX', 'EDI', '190', '16', '2024-04-28', '14:00'),
+            ('EDI', 'BMX', '110', '20', '2024-04-28', '11:00'),
+            ('LHR', 'EDI', '140', '33', '2024-04-28', '10:00'),
+            ('EDI', 'OXF', '120', '2', '2024-04-28', '10:00'),
+            ('NRT', 'EDI', '3190', '19', '2024-04-30', '10:00'),
+            ('EDI', 'NRT', '3180', '51', '2024-04-30', '18:00'),
+            ('OXF', 'EDI', '190', '61', '2024-04-30', '10:30'),
+            ('EDI', 'BMX', '110', '11', '2024-04-30', '16:00'),
+            ('LHR', 'EDI', '140', '0', '2024-05-1', '22:00'),
+            ('EDI', 'OXF', '120', '1', '2024-05-2', '23:00')
         ]
 
         # Loop through the list and execute the INSERT statement for each tuple
         for flight_data in flights_data:
             cursor.execute(
-                'INSERT INTO flights (from_city, to_city, price, available_seats,date) VALUES (?, ?, ?, ?, ?)', flight_data)
+                'INSERT INTO flights (from_city, to_city, price, available_seats,date,time) VALUES (?, ?, ?, ?, ?,?)',
+                flight_data)
 
         # Commit the transaction after all inserts
         conn.commit()
@@ -75,7 +77,7 @@ def get_flights(db_file, from_city, to_city, from_date):
     conn, cursor = get_cursor(db_file)
 
     try:
-        cursor.execute(list_sql, (from_city, to_city,from_date))
+        cursor.execute(list_sql, (from_city, to_city, from_date))
         records = cursor.fetchall()
         print("Total rows are:  ", len(records))
         cursor.close()

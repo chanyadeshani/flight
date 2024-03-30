@@ -155,7 +155,7 @@
             var flightTable = document.getElementById("flight-table");
             flightTable.innerHTML = " "; // Clear existing table content
             newRow = " <tr>";
-                newRow += "<th>Flight Number</th>";
+                newRow += "<th>Flight Time</th>";
                 newRow += "<th>Originating Terminal</th>";
                 newRow += "<th>Destination Terminal</th>";
                 newRow += " <th>Price</th>";
@@ -164,7 +164,7 @@
             flightTable.innerHTML += newRow
             data.forEach(row => {
                 var newRow = "<tr onclick=\"handleRowClick('" + row[0] + "')\">";
-                newRow += "<td>" + row[0] + "</td>";
+                newRow += "<td>" + row[5] + "</td>";
                 newRow += "<td>" + row[1] + "</td>";
                 newRow += "<td>" + row[2] + "</td>";
                 newRow += "<td>" + row[3] + "</td>";
