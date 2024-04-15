@@ -10,6 +10,7 @@ import forms
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 
+
 @app.route('/')
 def index():
     return render_template("index.html")
@@ -39,14 +40,6 @@ def submit_order():
 def customers():
     return "<H1> Successful</H1>"
 
-courses_list = [{
-    'title': 'Python 101',
-    'description': 'Learn Python basics',
-    'price': 34,
-    'available': True,
-    'level': 'Beginner'
-    }]
-
 
 @app.route('/customer', methods=('GET', 'POST'))
 def customer():
@@ -56,7 +49,6 @@ def customer():
         # Example: Save form data to the database
         return 'Form submitted successfully!'
     return render_template('Customer_details.html', form=form)
-
 
 
 if __name__ == '__main__':

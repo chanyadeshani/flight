@@ -57,7 +57,7 @@
 </div>
 
 <div>
-    <h2>Flight Details</h2>
+    <h2>Available Flight</h2>
     <table id="flight-table">
         <tr>
             <th>Flight Time</th>
@@ -164,7 +164,7 @@
             flightTable.innerHTML += newRow
             data.forEach(row => {
                 var newRow = "<tr onclick=\"handleRowClick('" + row[0] + "')\">";
-                newRow += "<td>" + row[5] + "</td>";
+                newRow += "<td>" + row[6] + "</td>";
                 newRow += "<td>" + row[1] + "</td>";
                 newRow += "<td>" + row[2] + "</td>";
                 newRow += "<td>" + row[3] + "</td>";
