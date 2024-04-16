@@ -36,9 +36,22 @@ def submit_order():
     return available_flights
 
 
-@app.route('/confirm')
+@app.route('/confirm', methods=['POST'])
 def customers():
-    return "<H1> Successful</H1>"
+    data = request.get_json()
+    print("Request received:", request.json)
+    first_name = data.get('first_name')
+    second_name = data.get('second_name')
+    last_name = data.get('last_name')
+    phone_number = data.get('phone_number')
+    email_address = data.get('email_address')
+    address = data.get('address')
+    pasenger = [0, 0, 0, 0, 0, 0]
+
+    pasenger = database.add_pasenger('flight.db', first_name, second_name, last_name, phone_number, email_address,
+                                     address)
+    response = jsonify({'message': 'Data received successfully'})
+    return pasenger
 
 
 @app.route('/customer', methods=('GET', 'POST'))
@@ -46,7 +59,16 @@ def customer():
     form = forms.CustomerForm()
     if request.method == 'POST' and form.validate_on_submit():
         # Process form data if it's a POST request and form is valid
-        # Example: Save form data to the database
+        # Save form data to the database
+        first_name = form.first_name.data
+        second_name = form.second_name.data
+        last_name = form.last_name.data
+        phone_number = form.phone_number.data
+        email_address = form.email_address.data
+        address = form.address.data
+        database.add_pasenger('flight.db', first_name, second_name, last_name, phone_number, email_address,
+                              address)
+        passenger = get_passenger('flight.db', )
         return 'Form submitted successfully!'
     return render_template('Customer_details.html', form=form)
 

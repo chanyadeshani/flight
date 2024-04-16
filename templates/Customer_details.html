@@ -14,7 +14,8 @@
 </head>
 <body>
 <h1> Enter passenger details</h1>
-<form method="POST" action="/confirm">
+<form method="POST">
+    {{form.hidden_tag()}}
         {{ form.csrf_token }}
         <p>
             {{ form.first_name.label }}
@@ -92,9 +93,23 @@
             </ul>
         {% endif %}
         <p>
-            <button onclick="addCustomer()">ADD</button>
+            {{form.submit()}}
         </p>
     </form>
+
+<div>
+    <h2>Passengers for this itinerary</h2>
+    <table id="passenger-table">
+        <tr>
+            <th>First Name</th>
+            <th>Last name</th>
+            <th>Destination Terminal</th>
+            <th>Price</th>
+            <th>Seats Available</th>
+            <th>Book</th>
+        </tr>
+    </table>
+</div>
 
 </body>
 </html>

@@ -19,7 +19,19 @@ def init_database(db_file):
     except Error as e:
         print(e)
     insert_order(db_file)
-
+    sql_create_order_table = """ CREATE TABLE IF NOT EXISTS customers (
+                                                        id integer PRIMARY KEY AUTOINCREMENT,
+                                                        first_name text NOT NULL,
+                                                        second_name text NOT NULL,
+                                                        last_name text NOT NULL,
+                                                        phone_number text NOT NULL,
+                                                        email_address text NOT NULL,
+                                                        address text NOT NULL
+                                                    ); """
+    try:
+        cursor.execute(sql_create_order_table)
+    except Error as e:
+        print(e)
 
 def get_cursor(db_file):
     conn = sqlite3.connect(db_file)
@@ -38,8 +50,8 @@ def insert_order(db_file):
             ('EDI', 'BMX', '110', '10', '2024-04-28', '11:00'),
             ('LHR', 'EDI', '140', '30', '2024-04-27', '12:00'),
             ('EDI', 'OXF', '120', '0', '2024-04-27', '13:00'),
-            ('NRT', 'EDI', '3190', '9', '2024-04-27', '10:00'),
-            ('EDI', 'NRT', '3180', '5', '2024-04-27', '20:00'),
+            ('NRT', 'EDI', '3190', '9', '2024-04-27', '19:00'),
+            ('EDI', 'NRT', '3180', '5', '2024-04-28', '13:00'),
             ('OXF', 'EDI', '190', '6', '2024-04-27', '21:00'),
             ('EDI', 'BMX', '110', '10', '2024-04-27', '06:00'),
             ('LHR', 'EDI', '140', '30', '2024-04-27', '10:00'),
@@ -50,7 +62,7 @@ def insert_order(db_file):
             ('EDI', 'BMX', '110', '20', '2024-04-28', '11:00'),
             ('LHR', 'EDI', '140', '33', '2024-04-28', '10:00'),
             ('EDI', 'OXF', '120', '2', '2024-04-28', '10:00'),
-            ('NRT', 'EDI', '3190', '19', '2024-04-30', '10:00'),
+            ('NRT', 'EDI', '3190', '19', '2024-04-30', '12:00'),
             ('EDI', 'NRT', '3180', '51', '2024-04-30', '18:00'),
             ('OXF', 'EDI', '190', '61', '2024-04-30', '10:30'),
             ('EDI', 'BMX', '110', '11', '2024-04-30', '16:00'),
@@ -85,3 +97,29 @@ def get_flights(db_file, from_city, to_city, from_date):
 
     except Error as e:
         print(e)
+
+def add_pasenger(db_file, first_name,second_name,last_name,phone_number,email_address,address):
+    conn, cursor = get_cursor(db_file)
+
+    cursor.execute(
+                'INSERT INTO customers (first_name, second_name, last_name, phone_number,email_address,address) VALUES (?, ?, ?, ?, ?,?)',
+                [first_name,second_name,last_name,phone_number,email_address,address])
+
+        # Commit the transaction after all inserts
+    conn.commit()
+
+    def get_passenger(db_file, firstname):
+        print("test customer")
+
+        list_sql = "SELECT * FROM customers WHERE firstname = ?"
+        conn, cursor = get_cursor(db_file)
+
+        try:
+            cursor.execute(list_sql, firstname)
+            records = cursor.fetchall()
+            print("Total rows are:  ", len(records))
+            cursor.close()
+            return records
+
+        except Error as e:
+            print(e)
