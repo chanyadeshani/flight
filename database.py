@@ -33,6 +33,7 @@ def init_database(db_file):
     except Error as e:
         print(e)
 
+
 def get_cursor(db_file):
     conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
@@ -61,13 +62,15 @@ def insert_order(db_file):
             ('BMX', 'EDI', '190', '16', '2024-04-28', '14:00'),
             ('EDI', 'BMX', '110', '20', '2024-04-28', '11:00'),
             ('LHR', 'EDI', '140', '33', '2024-04-28', '10:00'),
+            ('LHR', 'BRS', '140', '33', '2024-04-27', '10:00'),
             ('EDI', 'OXF', '120', '2', '2024-04-28', '10:00'),
             ('NRT', 'EDI', '3190', '19', '2024-04-30', '12:00'),
             ('EDI', 'NRT', '3180', '51', '2024-04-30', '18:00'),
             ('OXF', 'EDI', '190', '61', '2024-04-30', '10:30'),
             ('EDI', 'BMX', '110', '11', '2024-04-30', '16:00'),
             ('LHR', 'EDI', '140', '0', '2024-05-1', '22:00'),
-            ('EDI', 'OXF', '120', '1', '2024-05-2', '23:00')
+            ('EDI', 'OXF', '120', '1', '2024-05-2', '23:00'),
+            ('BRS', 'LHR', '100', '3', '2024-04-28', '10:00')
         ]
 
         # Loop through the list and execute the INSERT statement for each tuple
@@ -100,7 +103,7 @@ def get_flights(db_file, from_city, to_city, from_date):
     list_sql = "SELECT * FROM flights WHERE from_city = ? AND to_city = ? AND date = ?"
     conn, cursor = get_cursor(db_file)
     try:
-        cursor.execute(list_sql,(from_city, to_city, from_date))
+        cursor.execute(list_sql, (from_city, to_city, from_date))
         records = cursor.fetchall()
         print("Total rows are:  ", len(records))
         cursor.close()
@@ -110,28 +113,29 @@ def get_flights(db_file, from_city, to_city, from_date):
         print(e)
 
 
-def add_pasenger(db_file, first_name,second_name,last_name,phone_number,email_address,address):
+def add_pasenger(db_file, first_name, second_name, last_name, phone_number, email_address, address):
     conn, cursor = get_cursor(db_file)
 
     cursor.execute(
-                'INSERT INTO customers (first_name, second_name, last_name, phone_number,email_address,address) VALUES (?, ?, ?, ?, ?,?)',
-                [first_name,second_name,last_name,phone_number,email_address,address])
+        'INSERT INTO customers (first_name, second_name, last_name, phone_number,email_address,address) VALUES (?, ?, ?, ?, ?,?)',
+        [first_name, second_name, last_name, phone_number, email_address, address])
 
-        # Commit the transaction after all inserts
+    # Commit the transaction after all inserts
     conn.commit()
 
-    def get_passenger(db_file, firstname):
-        print("test customer")
 
-        list_sql = "SELECT * FROM customers WHERE firstname = ?"
-        conn, cursor = get_cursor(db_file)
+def get_passenger(db_file):
+    print("test customer")
 
-        try:
-            cursor.execute(list_sql, firstname)
-            records = cursor.fetchall()
-            print("Total rows are:  ", len(records))
-            cursor.close()
-            return records
+    list_sql = "SELECT * FROM customers ORDER BY ID DESC LIMIT 1"
+    conn, cursor = get_cursor(db_file)
 
-        except Error as e:
-            print(e)
+    try:
+        cursor.execute(list_sql)
+        records = cursor.fetchall()
+        print("Total rows are:  ", len(records))
+        cursor.close()
+        return records
+
+    except Error as e:
+        print(e)

@@ -44,8 +44,7 @@ def customers():
     passenger = [0, 0, 0, 0, 0, 0]
 
     passenger = database.add_pasenger('flight.db', first_name, second_name, last_name, phone_number, email_address,
-                                     address)
-    response = jsonify({'message': 'Data received successfully'})
+                                      address)
     return passenger
 
 
@@ -68,29 +67,51 @@ def customer():
     return render_template('Customer_details.html', form=form)
 
 
-# Dummy function to simulate database retrieval
 def get_booked_flight(flight_id):
     print('flight id = ', flight_id)
     flight = database.get_booked_flight('flight.db', flight_id)
+    dept = ''
+    if flight[0][1] == 'NRT':
+        dept = 'Tokyo(NRT)'
+    elif flight[0][1] == 'BMX':
+        dept = 'Birmingham(BMX)'
+    elif flight[0][1] == 'BRS':
+        dept = 'Bristol(BRS)'
+    elif flight[0][1] == 'EDI':
+        dept = 'Edinburgh(EDI)'
+    elif flight[0][1] == 'OXF':
+        dept = 'Oxford(OXF)'
+    else:
+        dept = 'Zurich(ZRH)'
+
+    dst = ''
+    if flight[0][1] == 'NRT':
+        dst = 'Tokyo(NRT)'
+    elif flight[0][1] == 'BMX':
+        dst = 'Birmingham(BMX)'
+    elif flight[0][1] == 'BRS':
+        dst = 'Bristol(BRS)'
+    elif flight[0][1] == 'EDI':
+        dst = 'Edinburgh(EDI)'
+    elif flight[0][1] == 'OXF':
+        dst = 'Oxford(OXF)'
+    else:
+        dept = 'Zurich(ZRH)'
+    passenger = database.get_passenger('flight.db')
+
     print('flight from db', flight)
+    print('passenger from db', passenger)
     return [
         {
-            'first_name': 'John',
-            'last_name': 'Doe',
-            'departure': 'New York',
-            'destination': 'London',
-            'time': '12:00',
-            'price': '$500'
-        },
-        {
-            'first_name': 'Jane',
-            'last_name': 'Smith',
-            'departure': 'Paris',
-            'destination': 'Tokyo',
-            'time': '14:00',
-            'price': '$700'
+            'first_name': passenger[0][1],
+            'last_name': passenger[0][3],
+            'departure': dept,
+            'destination': dst,
+            'time': flight[0][6],
+            'price(GBP)': flight[0][3]
         }
     ]
+
 
 @app.route('/get_booked_flight', methods=['POST'])
 def get_booked_flight_route():
