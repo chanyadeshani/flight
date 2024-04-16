@@ -82,14 +82,13 @@ def insert_order(db_file):
         print(e)
 
 
-def get_booked_flight(db_file, id):
-    list_sql = "SELECT * FROM flights WHERE id= ?"
+def get_booked_flight(db_file, flight_id):
+    list_sql = "SELECT * FROM flights WHERE flight_id= ?"
     conn, cursor = get_cursor(db_file)
 
     try:
-        cursor.execute(list_sql, id)
+        cursor.execute(list_sql, (flight_id,))
         records = cursor.fetchall()
-        print("Total rows are:  ", len(records))
         cursor.close()
         return records
 

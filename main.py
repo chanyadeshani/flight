@@ -68,11 +68,39 @@ def customer():
     return render_template('Customer_details.html', form=form)
 
 
+# Dummy function to simulate database retrieval
+def get_booked_flight(flight_id):
+    print('flight id = ', flight_id)
+    flight = database.get_booked_flight('flight.db', flight_id)
+    print('flight from db', flight)
+    return [
+        {
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'departure': 'New York',
+            'destination': 'London',
+            'time': '12:00',
+            'price': '$500'
+        },
+        {
+            'first_name': 'Jane',
+            'last_name': 'Smith',
+            'departure': 'Paris',
+            'destination': 'Tokyo',
+            'time': '14:00',
+            'price': '$700'
+        }
+    ]
+
 @app.route('/get_booked_flight', methods=['POST'])
-def get_booked_flight(number):
+def get_booked_flight_route():
     data = request.get_json()
-    id = data.get('first_name')
-    database.get_flights('flight', id)
+    flight_id = data.get('id')
+    if flight_id:  # Check if flight_id is provided
+        booked_flight = get_booked_flight(flight_id)
+        return jsonify(booked_flight)
+    else:
+        return jsonify({'error': 'Flight ID not provided'}), 400
 
 
 if __name__ == '__main__':
