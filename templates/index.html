@@ -120,6 +120,7 @@
     });
     function handleRowClick(flightNumber) {
         // Redirect to a new page when a row is clicked
+        localStorage.setItem('flightNumber', flightNumber);
         window.location.href = "/customer";
     }
 

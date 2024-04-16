@@ -1,10 +1,5 @@
 from flask import Flask, render_template, request, jsonify
 import database
-from flask_wtf import FlaskForm
-from wtforms import (StringField, TextAreaField, IntegerField, BooleanField,
-                     RadioField)
-from wtforms.validators import InputRequired, Length
-
 import forms
 
 app = Flask(__name__)
@@ -46,12 +41,12 @@ def customers():
     phone_number = data.get('phone_number')
     email_address = data.get('email_address')
     address = data.get('address')
-    pasenger = [0, 0, 0, 0, 0, 0]
+    passenger = [0, 0, 0, 0, 0, 0]
 
-    pasenger = database.add_pasenger('flight.db', first_name, second_name, last_name, phone_number, email_address,
+    passenger = database.add_pasenger('flight.db', first_name, second_name, last_name, phone_number, email_address,
                                      address)
     response = jsonify({'message': 'Data received successfully'})
-    return pasenger
+    return passenger
 
 
 @app.route('/customer', methods=('GET', 'POST'))
@@ -68,8 +63,8 @@ def customer():
         address = form.address.data
         database.add_pasenger('flight.db', first_name, second_name, last_name, phone_number, email_address,
                               address)
-        passenger = get_passenger('flight.db', )
-        return 'Form submitted successfully!'
+
+        return render_template('flight_details_display.html')
     return render_template('Customer_details.html', form=form)
 
 
