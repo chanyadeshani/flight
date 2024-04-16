@@ -68,6 +68,13 @@ def customer():
     return render_template('Customer_details.html', form=form)
 
 
+@app.route('/get_booked_flight', methods=['POST'])
+def get_booked_flight(number):
+    data = request.get_json()
+    id = data.get('first_name')
+    database.get_flights('flight', id)
+
+
 if __name__ == '__main__':
     database.init_database('flight.db')
     app.run(debug=True)

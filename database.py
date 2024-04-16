@@ -82,14 +82,12 @@ def insert_order(db_file):
         print(e)
 
 
-def get_flights(db_file, from_city, to_city, from_date):
-    print("test")
-    print("in DB", from_city, to_city, from_date)
-    list_sql = "SELECT * FROM flights WHERE from_city = ? AND to_city = ? AND date = ?"
+def get_booked_flight(db_file, id):
+    list_sql = "SELECT * FROM flights WHERE id= ?"
     conn, cursor = get_cursor(db_file)
 
     try:
-        cursor.execute(list_sql, (from_city, to_city, from_date))
+        cursor.execute(list_sql, id)
         records = cursor.fetchall()
         print("Total rows are:  ", len(records))
         cursor.close()
@@ -97,6 +95,21 @@ def get_flights(db_file, from_city, to_city, from_date):
 
     except Error as e:
         print(e)
+
+
+def get_flights(db_file, from_city, to_city, from_date):
+    list_sql = "SELECT * FROM flights WHERE from_city = ? AND to_city = ? AND date = ?"
+    conn, cursor = get_cursor(db_file)
+    try:
+        cursor.execute(list_sql,(from_city, to_city, from_date))
+        records = cursor.fetchall()
+        print("Total rows are:  ", len(records))
+        cursor.close()
+        return records
+
+    except Error as e:
+        print(e)
+
 
 def add_pasenger(db_file, first_name,second_name,last_name,phone_number,email_address,address):
     conn, cursor = get_cursor(db_file)

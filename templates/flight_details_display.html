@@ -14,4 +14,22 @@
         <tr>
         </tr>
     </table>
+
+      <script>
+          window.addEventListener("load", () => {
+          var data = {
+            "id": localStorage.getItem('flightNumber')
+            }
+          fetch('/get_booked_flight', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+        console.log(data)
+        })
+      </script>
 {% endblock %}
