@@ -3,7 +3,7 @@ import database
 import forms
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your secret key'
+app.config['SECRET_KEY'] = 'your secret key' #add a hard to guess character string
 
 
 @app.route('/')
