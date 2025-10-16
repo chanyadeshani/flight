@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+  <h2>Passengers for this itinerary</h2>
+  <table id="passenger-table">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Departure</th>
+        <th>Destination</th>
+        <th>Time</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Passenger data will be filled dynamically here -->
+    </tbody>
+  </table>
+</div>
+<script>
+  window.addEventListener("load", () => {
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let id = decodedCookie.split(' ')[1];
+    var data = {
+      "id": id
+    };
+    fetch('/get_booked_flight', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      // Update table with received passenger data
+      let passengerTable = document.getElementById("passenger-table").getElementsByTagName('tbody')[0];
+      data.forEach(passenger => {
+        let row = passengerTable.insertRow();
+        row.insertCell(0).textContent = passenger.first_name;
+        row.insertCell(1).textContent = passenger.last_name;
+        row.insertCell(2).textContent = passenger.departure;
+        row.insertCell(3).textContent = passenger.destination;
+        row.insertCell(4).textContent = passenger.time;
+        row.insertCell(5).textContent = passenger.price;
+      });
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  });
+</script>
+{% endblock %}

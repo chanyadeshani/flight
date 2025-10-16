@@ -25,7 +25,7 @@ def submit_order():
     available_flights2 = ''
     if flightType.lower() == "one-way" or flightType.lower() == "round-trip":
         flight = [origin, destination, from_date]
-        available_flights = database.get_flights('flight.db', flight[0], flight[1], flight[2])
+        available_flights = database.get_flights('flight_old.db', flight[0], flight[1], flight[2])
         print("test", len(available_flights))
 
     return available_flights
@@ -43,7 +43,7 @@ def customers():
     address = data.get('address')
     passenger = [0, 0, 0, 0, 0, 0]
 
-    passenger = database.add_pasenger('flight.db', first_name, second_name, last_name, phone_number, email_address,
+    passenger = database.add_pasenger('flight_old.db', first_name, second_name, last_name, phone_number, email_address,
                                       address)
     return passenger
 
@@ -60,7 +60,7 @@ def customer():
         phone_number = form.phone_number.data
         email_address = form.email_address.data
         address = form.address.data
-        database.add_pasenger('flight.db', first_name, second_name, last_name, phone_number, email_address,
+        database.add_pasenger('flight_old.db', first_name, second_name, last_name, phone_number, email_address,
                               address)
 
         return render_template('flight_details_display.html')
@@ -69,7 +69,7 @@ def customer():
 
 def get_booked_flight(flight_id):
     print('flight id = ', flight_id)
-    flight = database.get_booked_flight('flight.db', flight_id)
+    flight = database.get_booked_flight('flight_old.db', flight_id)
     dept = ''
     if flight[0][1] == 'NRT':
         dept = 'Tokyo(NRT)'
@@ -97,7 +97,7 @@ def get_booked_flight(flight_id):
         dst = 'Oxford(OXF)'
     else:
         dept = 'Zurich(ZRH)'
-    passenger = database.get_passenger('flight.db')
+    passenger = database.get_passenger('flight_old.db')
 
     print('flight from db', flight)
     print('passenger from db', passenger)
@@ -125,5 +125,5 @@ def get_booked_flight_route():
 
 
 if __name__ == '__main__':
-    database.init_database('flight.db')
+    database.init_database('flight_old.db')
     app.run(debug=True)

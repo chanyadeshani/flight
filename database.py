@@ -48,6 +48,7 @@ def insert_order(db_file):
             ('NRT', 'EDI', '3190', '9', '2026-04-27', '10:00'),
             ('EDI', 'NRT', '3180', '5', '2026-04-27', '20:00'),
             ('OXF', 'EDI', '190', '6', '2026-04-28', '3:00'),
+            ('OXF', 'EDI', '190', '6', '2026-04-30', '3:00'),
             ('EDI', 'BMX', '110', '10', '2026-04-28', '11:00'),
             ('LHR', 'EDI', '140', '30', '2026-04-27', '12:00'),
             ('EDI', 'OXF', '120', '0', '2026-04-27', '13:00'),
@@ -102,6 +103,7 @@ def get_booked_flight(db_file, flight_id):
 def get_flights(db_file, from_city, to_city, from_date):
     list_sql = "SELECT * FROM flights WHERE from_city = ? AND to_city = ? AND date = ?"
     conn, cursor = get_cursor(db_file)
+    print(from_city, to_city, from_date)
     try:
         cursor.execute(list_sql, (from_city, to_city, from_date))
         records = cursor.fetchall()

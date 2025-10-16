@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Flight Details</h2>
+<div class="input-container">
+    <label for="flight-type">Select Flight Type:</label>
+    <select id="flight-type" name="flight-type">
+        <option value="one-way">One-way</option>
+        <option value="round-trip">Round-Trip</option>
+        <option value="multi-city">Multi-city</option>
+    </select>
+</div>
+<div class="input-container">
+    <label for="origin">Leaving from:</label>
+    <select id="origin"  name="origin">
+         <option value="BMX">BMX(Birmingham)</option>
+        <option value="BRS">BRS(Bristol)</option>
+        <option value="EDI">EDI (Edinburgh)</option>
+         <option value="LHR">LHR(London)</option>
+        <option value="NRT">NRT(Tokyo)</option>
+        <option value="OXF">OXF (Oxford)</option>
+        <option value="ZRH">ZRH(Zurich)</option>
+    </select>
+</div>
+<div class="input-container">
+    <label for="destination">Going to:</label>
+    <select id="destination" name="destination">
+             <option value="BMX">BMX(Birmingham)</option>
+        <option value="BMX">BMX(Bristol)</option>
+        <option value="EDI">EDI (Edinburgh)</option>
+         <option value="LHR">LHR(London)</option>
+        <option value="NRT">NRT(Tokyo)</option>
+        <option value="OXF">OXF (Oxford)</option>
+        <option value="ZRH">ZRH(Zurich)</option>
+    </select>
+</div>
+<div class="input-container" id="stops-container" style="display: none;">
+    <label for="stops">Stops(1 or 2):</label>
+    <input type="text" id="stops" required name="stops">
+</div>
+<div class="input-container" id="date-from-container">
+    <label for="date_from">Date From:</label>
+    <input type="date" id="date_from" required name="date_from" min="2025-10-15" max="2026-12-30">
+</div>
+<div class="input-container" id="date-to-container" style="display: none;">
+    <label for="date_to">Date to:</label>
+    <input type="date" id="date_to" required name="date_to" min="2025-10-15" max="2026-12-30">
+</div>
+<div class="input-container">
+    <label for="seats">No of Traveler (up to 99)</label>
+    <input type="text" id="seats" name="seats" maxlength="2">
+    <p id="seats-error" style="display: none; color: red;">Please enter numbers only.</p>
+</div>
+
+<div class="button-container">
+    <p class="error" style="display: none;"> </p>
+    <button onclick="getFlights()">Confirm</button>
+</div>
+
+<div>
+    <h2>Available Flight</h2>
+    <table id="flight-table">
+        <tr>
+            <th>Flight Time</th>
+            <th>Originating Terminal</th>
+            <th>Destination Terminal</th>
+            <th>Price</th>
+            <th>Seats Available</th>
+            <th>Book</th>
+        </tr>
+    </table>
+</div>
+
+<script>
+    var seatsInput = document.getElementById("seats");
+    var seatsError = document.getElementById("seats-error");
+
+    seatsInput.addEventListener("input", function() {
+        var inputValue = seatsInput.value.trim();
+        if (!inputValue.match(/^\d*$/)) {
+            seatsError.style.display = "block";
+        } else {
+            seatsError.style.display = "none";
+        }
+    });
+
+    // Get references to date input fields
+    var dateFromInput = document.getElementById("date_from");
+    var dateToInput = document.getElementById("date_to");
+
+    // Add event listener to "date_from" input field
+    dateFromInput.addEventListener("change", function() {
+        // Update the "min" attribute of "date_to" input field
+        dateToInput.min = dateFromInput.value;
+
+        // If "date_to" value is less than "date_from", reset it
+        if (dateToInput.value < dateFromInput.value) {
+            dateToInput.value = dateFromInput.value;
+        }
+    });
+
+    // Disable previous dates
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById("date_from").setAttribute("min", today);
+
+    function displayFlightDetails() {
+        var flightType = document.getElementById("flight-type").value;
+
+        // Show/hide stops input area based on flight type
+        var stopsContainer = document.getElementById("stops-container");
+        stopsContainer.style.display = (flightType === "multi-city") ? "block" : "none";
+    }
+
+    // Call the function initially
+    displayFlightDetails();
+
+    // Add event listeners to inputs
+    var inputs = document.querySelectorAll('input[type="text"], select');
+    inputs.forEach(input => {
+        input.addEventListener('input', displayFlightDetails);
+    });
+
+
+    function handleRowClick(flightNumber) {
+        // Redirect to a new page when a row is clicked
+        localStorage.setItem('flightNumber', flightNumber);
+        document.cookie = "flightNumber " + flightNumber+"; path=/";
+        window.location.href = "/customer";
+    }
+
+    function getFlights() {
+        var flightType = document.getElementById("flight-type").value;
+        var origin = document.getElementById("origin").value;
+        var destination = document.getElementById("destination").value;
+        var stops = document.getElementById("stops").value;
+        var seats = document.getElementById("seats").value;
+        var date_from = document.getElementById("date_from").value;
+        var date_to = document.getElementById("date_to").value;
+
+        var data = {
+            "flightType": flightType,
+            "origin": origin,
+            "destination": destination,
+            "stops": stops,
+            "seats": seats,
+            "date_from" : date_from,
+            date_to: date_to
+        };
+
+        fetch('/get_flights', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update HTML table with returned flight details
+            var flightTable = document.getElementById("flight-table");
+            flightTable.innerHTML = " "; // Clear existing table content
+            newRow = " <tr>";
+                newRow += "<th>Flight Time</th>";
+                newRow += "<th>Originating Terminal</th>";
+                newRow += "<th>Destination Terminal</th>";
+                newRow += " <th>Price</th>";
+                newRow += " <th>Seats Available</th>";
+                newRow += "</tr>";
+            flightTable.innerHTML += newRow
+            data.forEach(row => {
+                var newRow = "<tr onclick=\"handleRowClick('" + row[0] + "')\">";
+                newRow += "<td>" + row[6] + "</td>";
+                newRow += "<td>" + row[1] + "</td>";
+                newRow += "<td>" + row[2] + "</td>";
+                newRow += "<td>" + row[3] + "</td>";
+                newRow += "<td>" + row[4] + "</td>";
+                newRow += "<td>" + "Book This" + "</td>";
+                newRow += "</tr>";
+                flightTable.innerHTML += newRow;
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle any errors that occurred during the fetch operation
+        });
+    }
+</script>
+{% endblock %}
